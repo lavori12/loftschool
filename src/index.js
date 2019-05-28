@@ -22,7 +22,7 @@ function map(array, fn) {
     let newArray = [];
 
     for (let i = 0; i < array.length; i++) {
-        newArray[i] = fn(array[i], i, array);
+        newArray.push(fn(array[i], i, array));
     }
 
     return newArray;
@@ -83,7 +83,7 @@ function slice(array, from = 0, to = array.length) {
         return newArray;
     }
     for (let i = 0; i < to - from; i++) {
-        newArray[i] = array[from + i];
+        newArray.push(array[from + i]);
     }
 
     return newArray;
