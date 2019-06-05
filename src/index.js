@@ -178,17 +178,17 @@ function collectDOMStat(root) {
 
     tree(root);
 
-    for (let node of elementsArray){
-        if (node.nodeType === 3){
+    for (let node of elementsArray) {
+        if (node.nodeType === 3) {
             statObject.texts += 1;
-        } else if (node.nodeType === 1){
+        } else if (node.nodeType === 1) {
             if (statObject.tags[node.tagName] === undefined) {
                 statObject.tags[node.tagName] = 1;
             } else {
                 statObject.tags[node.tagName] += 1;
             }
 
-            if (node.classList !== undefined){
+            if (node.classList !== undefined) {
                 for (let className of node.classList) {
                     if (statObject.classes[className] === undefined) {
                         statObject.classes[className] = 1;
@@ -236,6 +236,31 @@ function collectDOMStat(root) {
    }
  */
 function observeChildNodes(where, fn) {
+
+    const mutationConfig = {
+        childList: true,
+        subtree: true
+    };
+
+    let fnObject = {
+        type: '',
+        nodes: ''
+    };
+
+    let observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (Object.keys(mutation.addedNodes).length !== 0) {
+                fnObject.type = 'insert';
+                fnObject.nodes = Array.from(mutation.addedNodes);
+            } else if (Object.keys(mutation.removedNodes).length !== 0) {
+                fnObject.type = 'remove';
+                fnObject.nodes = Array.from(mutation.removedNodes);
+            }
+            fn(fnObject);
+        });
+    });
+
+    observer.observe(where, mutationConfig);
 }
 
 export {
