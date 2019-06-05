@@ -27,6 +27,18 @@ const homeworkContainer = document.querySelector('#homework-container');
    homeworkContainer.appendChild(newDiv);
  */
 function createDiv() {
+    let div = document.createElement('div'),
+        width = ((Math.random()*100) + 50).toFixed(),
+        height = ((Math.random()*100) + 50).toFixed();
+
+    div.className = 'draggable-div';
+    div.style.backgroundColor = '#'+ Math.round(0xffffff * Math.random()).toString(16);
+    div.style.height = ((Math.random()*100) + 50).toFixed() + 'px';
+    div.style.width = ((Math.random()*100) + 50).toFixed() + 'px';
+    div.style.left = (Math.random() * (document.body.clientWidth - width)).toFixed() + 'px';
+    div.style.top = (Math.random() * (document.body.clientHeight - height)).toFixed() + 'px';
+
+    return div;
 }
 
 /*
@@ -38,6 +50,47 @@ function createDiv() {
    addListeners(newDiv);
  */
 function addListeners(target) {
+
+    target.onmousedown = function(e) {
+        let coords = getCoords(target),
+            shiftX = e.pageX - coords.left,
+            shiftY = e.pageY - coords.top;
+
+        target.style.position = 'absolute';
+        document.body.appendChild(target);
+        moveAt(e);
+
+        target.style.zIndex = 1000; // над другими элементами
+
+        function moveAt(e) {
+            target.style.left = e.pageX - shiftX + 'px';
+            target.style.top = e.pageY - shiftY + 'px';
+        }
+
+        document.onmousemove = function(e) {
+            moveAt(e);
+        };
+
+        target.onmouseup = function() {
+            document.onmousemove = null;
+            target.onmouseup = null;
+        };
+
+    }
+
+    target.ondragstart = function() {
+        return false;
+    };
+
+    function getCoords(elem) {
+        let box = elem.getBoundingClientRect();
+
+        return {
+            top: box.top + pageYOffset,
+            left: box.left + pageXOffset
+        };
+    }
+
 }
 
 let addDivButton = homeworkContainer.querySelector('#addDiv');
