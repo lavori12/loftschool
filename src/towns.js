@@ -38,7 +38,7 @@ const homeworkContainer = document.querySelector('#homework-container');
  */
 function loadTowns() {
 
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         let xhr = new XMLHttpRequest();
 
         xhr.open('GET', 'https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json');
@@ -48,6 +48,10 @@ function loadTowns() {
             resolve (xhr.response.sort((a, b) => {
                 return a.name > b.name? 1: -1
             }))
+        });
+
+        xhr.addEventListener('error', () => {
+            reject();
         });
 
         xhr.send();
@@ -86,15 +90,35 @@ loadTowns()
         towns = res;
         loadingBlock.style.display = 'none';
         filterBlock.style.display = 'block';
+    })
+    .catch(() => {
+        filterResult.innerHTML = 'Не удалось загрузить города';
+
+        let tryAgain = document.createElement('button');
+
+        tryAgain.innerText = 'Повторить';
+        homeworkContainer.appendChild(tryAgain);
+        tryAgain.addEventListener('click', () => {
+            loadTowns();
+            homeworkContainer.removeChild(tryAgain);
+        });
     });
 
 filterInput.addEventListener('keyup', function() {
+
     // это обработчик нажатия кливиш в текстовом поле
 
     if (filterInput.value) {
-        let filterTown = towns.filter(item => isMatching(item.name, filterInput.value));
 
-        filterResult.innerHTML = filterTown.map(item => item.name.toString()).join('');
+        let filterTown = towns.filter(item => isMatching(item.name, filterInput.value)),
+            result = filterTown.map(item => item.name.toString());
+
+        for (let i = 0; i < result.length; i++) {
+            let div = document.createElement('div');
+
+            div.innerText = result[i];
+            filterResult.appendChild(div);
+        }
     } else {
         filterResult.innerHTML = '';
     }
