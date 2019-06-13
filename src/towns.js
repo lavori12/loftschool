@@ -84,24 +84,25 @@ const filterInput = homeworkContainer.querySelector('#filter-input');
 const filterResult = homeworkContainer.querySelector('#filter-result');
 
 let towns = [];
+let tryAgain = document.createElement('button');
+
+tryAgain.textContent = 'Повторить';
+homeworkContainer.appendChild(tryAgain);
+tryAgain.addEventListener('click', () => {
+    loadTowns();
+    homeworkContainer.removeChild(tryAgain);
+});
 
 loadTowns()
     .then(res => {
         towns = res;
+        tryAgain.style.display = 'none';
         loadingBlock.style.display = 'none';
         filterBlock.style.display = 'block';
     })
     .catch(() => {
+        tryAgain.style.display = 'block';
         filterResult.innerHTML = 'Не удалось загрузить города';
-
-        let tryAgain = document.createElement('button');
-
-        tryAgain.innerText = 'Повторить';
-        homeworkContainer.appendChild(tryAgain);
-        tryAgain.addEventListener('click', () => {
-            loadTowns();
-            homeworkContainer.removeChild(tryAgain);
-        });
     });
 
 filterInput.addEventListener('keyup', function() {
@@ -114,7 +115,7 @@ filterInput.addEventListener('keyup', function() {
             result = filterTown.map(item => item.name.toString());
 
         for (let i = 0; i < result.length; i++) {
-            let div = document.createElement('div');
+            let div = document.createElement('p');
 
             div.innerText = result[i];
             filterResult.appendChild(div);
