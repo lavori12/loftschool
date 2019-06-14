@@ -41,7 +41,7 @@ function loadTowns() {
     return new Promise((resolve, reject) => {
         let xhr = new XMLHttpRequest();
 
-        xhr.open('GET', 'https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json');
+        xhr.open('GET', 'https://raw.githubusercontent.com/smelukov/citiesTest/master/citie.json');
         xhr.responseType = 'json';
 
         xhr.addEventListener('load', () => {
@@ -90,7 +90,6 @@ tryAgain.textContent = 'Повторить';
 homeworkContainer.appendChild(tryAgain);
 tryAgain.addEventListener('click', () => {
     loadTowns();
-    homeworkContainer.removeChild(tryAgain);
 });
 
 loadTowns()
@@ -101,8 +100,10 @@ loadTowns()
         filterBlock.style.display = 'block';
     })
     .catch(() => {
+
+        filterResult.innerText = 'Не удалось загрузить города';
         tryAgain.style.display = 'block';
-        filterResult.innerHTML = 'Не удалось загрузить города';
+        loadingBlock.style.display = 'none';
     });
 
 filterInput.addEventListener('keyup', function() {
@@ -110,7 +111,7 @@ filterInput.addEventListener('keyup', function() {
     // это обработчик нажатия кливиш в текстовом поле
 
     if (filterInput.value) {
-
+        filterResult.innerHTML = '';
         let filterTown = towns.filter(item => isMatching(item.name, filterInput.value)),
             result = filterTown.map(item => item.name.toString());
 
