@@ -29,7 +29,7 @@
    homeworkContainer.appendChild(newDiv);
  */
 
-import { loadAndSortTowns} from './index';
+import { loadAndSortTowns } from './index';
 const homeworkContainer = document.querySelector('#homework-container');
 
 /*
