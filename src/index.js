@@ -1,11 +1,10 @@
-var myMap, clusterer;
+var clusterer, currentCoords;
 const popupWindow = document.querySelector('.popup_window'),
     popupClose = document.querySelector('#close'),
     addReview = document.querySelector('#add_review'),
     storageName = 'marks';
 
-let currentCoords = [0, 0],
-    reviewPlace = document.querySelector('#place'),
+let reviewPlace = document.querySelector('#place'),
     reviewName = document.querySelector('#name'),
     reviewReview = document.querySelector('#review'),
     address = document.querySelector('#address'),
@@ -17,7 +16,7 @@ ymaps.ready(init);
 
 function init() {
 
-    myMap = new ymaps.Map('map', {
+    let myMap = new ymaps.Map('map', {
         center: [61.78, 34.35],
         zoom: 13,
         controls: []
@@ -44,7 +43,7 @@ function init() {
         allMarks = [];
     }
     if ( allMarks.length > 0) {
-        allMarks.forEach((mark) => createPlacemark(mark.coords));
+        allMarks.forEach((mark) => addPlacemark(mark.coords));
     }
 }
 
@@ -53,66 +52,71 @@ popupWindow.addEventListener('click', (e) => {
         hidePopUp();
     } else if (e.target === addReview) {
         createPlacemark(currentCoords);
+        hidePopUp();
     }
 });
 
 const showPopUp = (event) => {
-    popupWindow.style.top = event.get('domEvent').get('pageY')+'px';
-    popupWindow.style.left = event.get('domEvent').get('pageX')+'px';
+    reviewName.value = '';
+    reviewPlace.value = '';
+    reviewReview.value = '';
+    address.innerHTML = '';
     currentCoords = event.get('coords');
-    getAddress(currentCoords);
+    // currentCoords[0] = parseFloat(currentCoords[0].toFixed(3));
+    // currentCoords[1] = parseFloat(currentCoords[1].toFixed(3));
+    getAddress(currentCoords).then(() => {
+        let currentMark = searchMark(currentAddress);
 
-    if (allMarks && allMarks[currentAddress]) {
-        getReviews(allMarks[currentAddress]);
-    }
-    popupWindow.style.display = 'block';
+        if (allMarks && currentMark) {
+            getReviews(currentMark);
+        }
+        address.innerHTML = currentAddress;
+
+        popupWindow.style.top = event.get('domEvent').get('pageY')+'px';
+        popupWindow.style.left = event.get('domEvent').get('pageX')+'px';
+        popupWindow.style.display = 'block';
+    });
 };
 
 const hidePopUp = () => {
     popupWindow.style.display = 'none';
-    currentCoords = [0, 0];
-    reviewName.innerHTML = '';
-    reviewPlace.innerHTML = '';
-    reviewReview.innerHTML = '';
-    address.innerHTML = '';
+    //currentCoords = [0, 0];
 };
 
-const createPlacemark = (markCoords) => {
-    let newMark = {};
-
-    newMark.placemark = new ymaps.Placemark(markCoords, {}, {
+const addPlacemark = (markCoords) => {
+    let placemark = new ymaps.Placemark(markCoords, {}, {
 
         preset: 'islands#DotIcon',
         iconColor: '#ff9966'
     });
 
-    newMark.coords = markCoords;
+    placemark.events.add('click', (e) => showPopUp(e));
+    clusterer.add(placemark);
+};
 
-    if (markCoords !== [0, 0]) {
-        getAddress(newMark.coords);
-        newMark.address = currentAddress;
-        if (newMark.address !== '') {
-            if (allMarks[newMark.address] !== undefined) {
-                clusterer.add(newMark.placemark);
-                newMark.reviews = [];
-            } else {
-                newMark = allMarks[newMark.address];
-            }
+const createPlacemark = (markCoords) => {
+    getAddress(markCoords).then(() => {
+        let newMark = searchMark(currentAddress);
 
-            newMark.reviews.push({
-                name: reviewName,
-                place: reviewPlace,
-                text: reviewReview
-            });
-
-            newMark.addEventListener('click', () => showPopUp());
-            allMarks[newMark.address] = newMark;
-
-            localStorage.setItem(storageName, JSON.stringify(allMarks));
+        if (!newMark) {
+            newMark = {};
+            addPlacemark(markCoords);
+            newMark.coords = markCoords;
+            newMark.address = currentAddress;
+            newMark.reviews = [];
         }
-    }
 
-    hidePopUp();
+        newMark.reviews.push({
+            name: reviewName.value,
+            place: reviewPlace.value,
+            text: reviewReview.value,
+            date: new Date()
+        });
+
+        allMarks.push(newMark);
+        localStorage.setItem(storageName, JSON.stringify(allMarks));
+        console.log(localStorage);
+    });
 
 };
 
@@ -122,24 +126,39 @@ const getReviews = (mark) => {
         let divList = document.createElement('div'),
             popupName = document.createElement('span'),
             popupPlace = document.createElement('span'),
-            popupReview = document.createElement('span');
+            popupReview = document.createElement('div'),
+            popupDate = document.createElement('span');
 
-        popupName.innerHTML = review.name;
-        popupPlace.innerHTML = review.place;
-        popupReview.innerHTML = review.text;
+        popupName.innerHTML = review.name + ' ';
+        popupPlace.innerHTML = review.place + ' ';
+        popupReview.innerHTML = review.text + ' ';
+        popupDate.innerHTML = review.date.getDate() + '.' + (review.date.getMonth()+1) + '.' + review.date.getFullYear();
+
+        popupName.classList.add('popupName');
+        popupPlace.classList.add('popupPlace');
+        popupDate.classList.add('popupDate');
 
         divList.appendChild(popupName);
         divList.appendChild(popupPlace);
-        divList.appendChild();
+        divList.appendChild(popupDate);
+        divList.appendChild(popupReview);
         popupReviews.appendChild(divList);
 
     }
 };
 
 const getAddress = (coords) => {
-    currentAddress = '';
+    return ymaps.geocode(coords).then(function (res) {
+        let firstGeoObject = res.geoObjects.get(0);
 
-    ymaps.geocode(coords).then((res) => {
-        currentAddress = res.geoObjects.get(0).getAddressLine();
-    })
+        currentAddress = firstGeoObject.getAddressLine();
+    });
+};
+
+const searchMark = (current) => {
+    for (let i = 0; i < allMarks.length; i++) {
+        if (allMarks[i].address === current) {
+            return allMarks[i];
+        }
+    }
 };

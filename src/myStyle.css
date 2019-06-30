@@ -74,6 +74,7 @@ hr {
     background-color: #ffffff;
     padding: 3px 3px 3px 3px;
     overflow-y: scroll;
+    color: #666666;
 }
 
 #review {
@@ -110,4 +111,12 @@ hr {
     color: #ffffff;
     border: none;
     alignment: right;
+}
+
+.popupName {
+    font-weight: bold;
+}
+
+.popupDate, .popupPlace {
+    color: #999999;
 }
