@@ -1,7 +1,113 @@
-#map{height: 100%;}
+*{font-family: 'Fira Sans', sans-serif;}
+.bold{font-weight:bold;}
+.italic{font-style: italic;}
+.oblique{font-style: oblique;}
 
-html, body {
+#map{
     height: 100%;
-    margin: 0;
-    padding: 0;
+    width: 100%;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+}
+
+.popup_window {
+    width:380px;
+    height: auto;
+    background-color: #ffffff;
+    position: absolute;
+    overflow-x: hidden;
+    display: none;
+    top: 0px;
+    border-radius: 10px;
+}
+
+.popup-address-block {
+    width: 100%;
+    height: 45px;
+    background-color: #ff9966;
+    color: #ffffff;
+    padding: 3px 3px 3px 3px;
+}
+
+.popup-info {
+    width: 100%;
+    height: 327px;
+    background-color: #ffffff;
+    alignment: center;
+    padding: 3px 3px 3px 3px;
+}
+
+input, textarea {
+    background-color: #ffffff;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-style: inset;
+    border-width: 2px;
+    border-color: #E8E8E8;
+    margin: 3px 5px 3px 5px;
+    text-align: left;
+}
+
+.popup-info input {
+    width: 354px;
+    height: 30px;
+
+}
+
+hr {
+    width: 350px;
+    alignment: center;
+    display: block;
+    margin-before: 0.5em;
+    margin-after: 0.5em;
+    margin-start: auto;
+    margin-end: auto;
+    overflow: hidden;
+    border-style: inset;
+    border-width: 1px;
+}
+.popup-reviews {
+    width: 100%;
+    height: 155px;
+    background-color: #ffffff;
+    padding: 3px 3px 3px 3px;
+    overflow-y: scroll;
+}
+
+#review {
+    width: 354px;
+    height: 150px;
+    vertical-align: top;
+    resize: none;
+
+}
+
+.popup-button {
+    alignment: right;
+    height: 40px;
+    max-width: 100px;
+    margin: 5px 0px 5px auto;
+
+}
+
+#close {
+    background-color: #ff9966;
+    color: #ffffff;
+    float: right;
+    font-size: 24px;
+    margin-right: 15px;
+}
+
+#add_review {
+    height: 30px;
+    width: 88px;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    background-color: #ff9966;
+    color: #ffffff;
+    border: none;
+    alignment: right;
 }

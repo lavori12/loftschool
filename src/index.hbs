@@ -1,16 +1,38 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Simple Map</title>
+    <title>Geo reviews</title>
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
-    <link rel="stylesheet" type="text/css" href="myStyle.css">
+    <link href="https://fonts.googleapis.com/css?family=Fira+Sans" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/src/myStyle.css">
 </head>
 <body>
 <div id="map"></div>
-<script src="index.js"></script>
-<script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA3MAmMM0Aa-MWMHwN3TeEYVsa3KSMQiXk&callback=initMap">
-</script>
+<div class="popup_window">
+    <div class="popup-address-block">
+        <img
+                src="/images/placemark_form.svg"
+                height="14px"
+                width="14px" />
+        <span id="address"></span>
+        <span id="close">&times;</span>
+    </div>
+    <div class="popup-reviews">
+    </div>
+    <hr>
+    <div class="popup-info">
+        <p style="color: #ff9966; alignment: left; font-weight: bold">ВАШ ОТЗЫВ</p>
+        <input type="text" id="name" placeholder="Ваше имя"><br>
+        <input type="text" id="place" placeholder="Укажите место"><br>
+        <textarea id="review" placeholder="Поделитесь впечатлениями"></textarea><br>
+    </div>
+    <div class="popup-button">
+        <button id="add_review">Добавить</button>
+    </div>
+</div>
+<script src="https://api-maps.yandex.ru/2.1/?apikey=8152d8c4-026a-4072-af63-4319e8fd7add&lang=ru_RU" type="text/javascript"></script>
+<script src="/src/index.js"></script>
+
 </body>
 </html>
