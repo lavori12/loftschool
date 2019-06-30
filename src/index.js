@@ -27,12 +27,20 @@ function init() {
         clusterDisableClickZoom: true,
         clusterHideIconOnBalloonOpen: false,
         geoObjectHideIconOnBalloonOpen: false,
-        clusterIconColor: '#ff9966'
+        clusterIconColor: '#ff9966',
+        clusterOpenBalloonOnClick: true,
+        clusterBalloonContentLayout: 'cluster#balloonCarousel',
+        clusterBalloonItemContentLayout: customItemContentLayout,
+        clusterBalloonPanelMaxMapArea: 0,
+        clusterBalloonContentLayoutWidth: 200,
+        clusterBalloonContentLayoutHeight: 130,
+        clusterBalloonPagerSize: 5
+
     });
 
     myMap.events.add('click', (e) => {
         e.preventDefault();
-        showPopUp(e);
+        showPopUp(e, 'map');
     });
 
     myMap.geoObjects.add(clusterer);
@@ -56,21 +64,30 @@ popupWindow.addEventListener('click', (e) => {
     }
 });
 
-const showPopUp = (event) => {
+const showPopUp = (event, target) => {
     reviewName.value = '';
     reviewPlace.value = '';
     reviewReview.value = '';
     address.innerHTML = '';
-    currentCoords = event.get('coords');
+    popupReviews.innerHTML = '';
+
+    if (target === 'map') {
+        currentCoords = event.get('coords');
+
+    } else if (target === 'placemark') {
+        currentCoords = event.get('target').geometry.getCoordinates();
+    }
     // currentCoords[0] = parseFloat(currentCoords[0].toFixed(3));
     // currentCoords[1] = parseFloat(currentCoords[1].toFixed(3));
     getAddress(currentCoords).then(() => {
         let currentMark = searchMark(currentAddress);
 
         if (allMarks && currentMark) {
+            address.innerHTML = currentMark.address;
             getReviews(currentMark);
+        } else {
+            address.innerHTML = currentAddress;
         }
-        address.innerHTML = currentAddress;
 
         popupWindow.style.top = event.get('domEvent').get('pageY')+'px';
         popupWindow.style.left = event.get('domEvent').get('pageX')+'px';
@@ -80,7 +97,6 @@ const showPopUp = (event) => {
 
 const hidePopUp = () => {
     popupWindow.style.display = 'none';
-    //currentCoords = [0, 0];
 };
 
 const addPlacemark = (markCoords) => {
@@ -90,7 +106,7 @@ const addPlacemark = (markCoords) => {
         iconColor: '#ff9966'
     });
 
-    placemark.events.add('click', (e) => showPopUp(e));
+    placemark.events.add('click', (e) => showPopUp(e, 'placemark'));
     clusterer.add(placemark);
 };
 
@@ -104,18 +120,21 @@ const createPlacemark = (markCoords) => {
             newMark.coords = markCoords;
             newMark.address = currentAddress;
             newMark.reviews = [];
+            allMarks.push(newMark);
         }
+
+        let day = new Date().getDate();
+        let month = new Date().getMonth() + 1;
+        let year = new Date().getFullYear();
 
         newMark.reviews.push({
             name: reviewName.value,
             place: reviewPlace.value,
             text: reviewReview.value,
-            date: new Date()
+            date: day + '.' + month + '.' + year
         });
 
-        allMarks.push(newMark);
         localStorage.setItem(storageName, JSON.stringify(allMarks));
-        console.log(localStorage);
     });
 
 };
@@ -132,7 +151,7 @@ const getReviews = (mark) => {
         popupName.innerHTML = review.name + ' ';
         popupPlace.innerHTML = review.place + ' ';
         popupReview.innerHTML = review.text + ' ';
-        popupDate.innerHTML = review.date.getDate() + '.' + (review.date.getMonth()+1) + '.' + review.date.getFullYear();
+        popupDate.innerHTML = review.date;
 
         popupName.classList.add('popupName');
         popupPlace.classList.add('popupPlace');
