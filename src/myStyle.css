@@ -120,3 +120,18 @@ hr {
 .popupDate, .popupPlace {
     color: #999999;
 }
+
+.balloonHeader {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.balloonBody {
+    text-align: left;
+}
+
+.balloonFooter {
+    text-align: right;
+    color: #7D7D7D;
+    margin-top: 10px;
+}
