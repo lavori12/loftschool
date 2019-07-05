@@ -1,0 +1,117 @@
+* {
+    margin:0;
+    padding: 0;
+}
+
+html, body {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+#mainWindow {
+    display: flex;
+    height: 100%;
+}
+
+
+#avatar {
+    display: none;
+    position: absolute;
+    width: 400px;
+    height: 300px;
+    top: 50px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    border: 0px;
+}
+
+#authWindow {
+    display: block;
+    position: absolute;
+    width: 300px;
+    height: 200px;
+    top: 50px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    border: 1px solid;
+}
+
+#leftPanel {
+    width: 20%;
+    background-color: #ff9966;
+    color: #ffffff;
+}
+
+#chat {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+}
+
+#messagesContainer {
+    flex: 1 1 0;
+
+}
+
+#newMessage {
+    display: flex;
+    flex: 0 0 auto;
+    height: 90px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#textMessage {
+    flex: 1 0 auto;
+    margin: 0 20px;
+}
+
+#sendButton {
+    margin: 0 20px;
+    flex: 0 0 auto;
+    background-color: #ff9966;
+    color: #ffffff;
+    border: 0px;
+    border-radius: 10px;
+    width: 100px;
+    height: 30px;
+}
+
+.fakeUpload {
+    display: flex;
+    width: 400px;
+    height: 300px;
+    border-radius: 4px;
+    border: 1px dashed #000;
+    justify-content: center;
+    align-items: center;
+}
+
+label {
+    display: flex;
+    width: 400px;
+    height: 300px;
+    border-radius: 4px;
+    border: 1px dashed #000;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+#fileElem {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+}
+
+#userPhoto {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+}

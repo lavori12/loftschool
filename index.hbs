@@ -1,9 +1,47 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>{{htmlWebpackPlugin.options.title}}</title>
+    <meta charset="UTF-8">
+    <title>{{htmlWebpackPlugin.options.title}}</title>
+    <link rel="stylesheet" type="text/css" href="src/myStyle.css">
 </head>
 <body>
+<div id="mainWindow">
+    <div id="leftPanel">
+        <div id="userInfo">
+            <img src="" alt="" id="userPhoto">
+            <span id="user"><h2>Добро пожаловать</h2></span>
+        </div>
+        <div id="members">
+            <div id="counter"><h2>Участники</h2></div>
+        </div>
+    </div>
+    <div id="chat">
+        <div id="messagesContainer">
+
+        </div>
+        <div id="newMessage">
+            <input type="text" id="textMessage" placeholder="Введите сообщение">
+            <button id="sendButton"><strong>Отправить</strong></button>
+        </div>
+    </div>
+</div>
+
+<div id="authWindow">
+    <h3>Авторизация</h3>
+    <input type="text" id="name" placeholder="ФИО">
+    <input type="text" id="login" placeholder="Ник">
+    <button id="loginButton"><strong>Войти</strong></button>
+</div>
+
+<div id="avatar">
+    <label class="label">
+        <input type="file" id="fileElem" multiple="false" accept="image/*">
+        <span class="fakeUpload">Перетяните изображение</span>
+    </label>
+    <button id="uploadButton">Загрузить</button>
+    <button id="cancelButton">Отмена</button>
+</div>
+<script src="src/app.js"></script>
 </body>
 </html>
