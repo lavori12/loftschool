@@ -1,17 +1,35 @@
-const authWindow = document.querySelector('#authWindow'),
-    loginButton = document.querySelector('#loginButton'),
-    uploadButton = document.querySelector('#uploadButton'),
-    cancelButton = document.querySelector('#cancelButton'),
-    fileElem = document.querySelector('#fileElem'),
-    allMembers = document.querySelector('#members'),
-    avatar = document.querySelector('#avatar'),
-    textMessage = document.querySelector('#textMessage'),
-    sendButton = document.querySelector('#sendButton'),
-    messageContainer = document.querySelector('#messagesContainer'),
+const authWindow = document.getElementById('authWindow'),
+    loginButton = document.getElementById('loginButton'),
+    uploadButton = document.getElementById('uploadButton'),
+    cancelButton = document.getElementById('cancelButton'),
+    fileElem = document.getElementById('fileElem'),
+    allMembers = document.getElementById('members'),
+    counter = document.getElementById('counter'),
+    avatar = document.getElementById('avatar'),
+    textMessage = document.getElementById('textMessage'),
+    sendButton = document.getElementById('sendButton'),
+    messageContainer = document.getElementById('messagesContainer'),
+    userNameInput = document.getElementById('userNameInput'),
+    userLoginInput = document.getElementById('userLoginInput'),
+    userPhoto = document.getElementById('userPhoto'),
+    userName = document.getElementById('userName'),
+    welcome = document.getElementById('welcome'),
+    userInfo = document.getElementById('userInfo'),
+    fakeUpload = document.getElementById('fakeUpload'),
     socket = new WebSocket('ws://localhost:8081');
+
+const NO_PHOTO = 'images/NO.jpg';
 
 let fileBase;
 
+let users = {},
+    messages = {},
+    loginData = {
+        name: '',
+        login: ''
+    },
+    onlineCounter = 0;
+    
 socket.onopen = function () {
     authWindow.style.display = 'block';
 };
@@ -29,17 +47,20 @@ socket.onmessage = function (event) {
     const res = JSON.parse(event.data);
 
     switch (res.payload) {
-        case 'upload_photo':
-            uploadImg(res.data);
+        case 'login':
+            onLogin(res.data);
             break;
-        case 'get_photos':
-            renderPhoto(res.data);
+        case 'userConnect':
+            onUserConnect(res.data);
             break;
-        case 'new_user':
-            updateMembers(res.data);
+        case 'userDisconnect':
+            onUserDisconnect(res.data);
             break;
-        case 'delete_user':
-            updateMembers(res.data);
+        case 'uploadPhoto':
+            onUploadPhoto(res.data);
+            break;
+        case 'updatePhoto':
+            onUpdatePhoto(res.data);
             break;
         case 'send_message':
             sendMessage(res.data);
@@ -52,17 +73,9 @@ socket.onerror = function (error) {
 };
 
 loginButton.addEventListener('click', () => {
-    const userName = document.querySelector('#name').value,
-        login = document.querySelector('#login').value,
-        userPhoto = document.querySelector('#userPhoto'),
-        data = JSON.stringify({ payload: 'new_user', data: { name: userName, login: login, photo: userPhoto } });
-
-    document.querySelector('#user').innerHTML = `<h2>${userName}</h2>`;
-    userPhoto.src = 'images/NO.jpg';
-    authWindow.style.display = 'none';
-    userPhoto.addEventListener('click', () => {
-        avatar.style.display = 'block';
-    });
+    loginData.name = userNameInput.value;
+    loginData.login = userLoginInput.value;
+    const data = JSON.stringify({ payload: 'login', data: loginData });
     socket.send(data);
 });
 
@@ -84,26 +97,27 @@ sendButton.addEventListener('click', () => {
     }
 });
 
-fileElem.addEventListener('change', function () {
-    const fileElem = document.getElementById('fileElem');
+fileElem.addEventListener('change', () => {
+
 
     const file = fileElem.files[0];
+    console.log(file);
     let reader = new FileReader();
 
     reader.onloadend = function (e) {
         const img = e.target.result;
         const container = document.querySelector('.label');
-
+        fakeUpload.style.display = 'none';
         fileBase = img;
-        container.style = `background-image: url('${img}')`;
+        container.style.backgroundImage =  `url('${img}')`;
     };
 
     reader.readAsDataURL(file);
 });
 
-uploadButton.addEventListener('click', function () {
+uploadButton.addEventListener('click',  () => {
     if (fileBase) {
-        const data = JSON.stringify({ payload: 'upload_photo', data: fileBase });
+        const data = JSON.stringify({ payload: 'uploadPhoto', data: fileBase });
 
         socket.send(data);
     } else {
@@ -113,6 +127,7 @@ uploadButton.addEventListener('click', function () {
 
 cancelButton.addEventListener('click', () => {
     avatar.style.display = 'none';
+    document.querySelector('.label').style.backgroundImage = '';
 });
 
 const sendMessage = (data) => {
@@ -149,20 +164,74 @@ const renderPhoto = (photos = []) => {
     }
 };
 
-const updateMembers = (members) => {
-    const users = document.createElement('div');
 
-    users.innerHTML = '<h2>Участники</h2>';
+const onLogin = (data) => {
+    if (data) {
+        userName.innerHTML = `<h2>${loginData.name}</h2>`;
+        userPhoto.src = NO_PHOTO;
+        authWindow.style.display = 'none';
+        welcome.style.display = 'none';
+        userInfo.style.display = 'block';
+        userPhoto.addEventListener('click', () => {
+            avatar.style.display = 'block';
+            fakeUpload.style.display = '';
+        });
 
-    for (const key in members) {
-        const member = document.createElement('div');
-
-        if (members[key].name) {
-            member.innerHTML = members[key].name;
-            users.appendChild(member);
-        }
-
+        fillUsers(data.onlineUsers);
+        //updateMessages();
     }
-    allMembers.innerHTML = '';
-    allMembers.appendChild(users);
 };
+
+const createUser = (user) => {
+    const member = document.createElement('div');
+
+    member.innerHTML = user.name;
+    allMembers.appendChild(member);
+    users[user.login] = {
+        login: user.login,
+        name: user.name,
+        photo: user.photo || null,
+        element: member
+    };
+    updateOnlineCounter(1);
+};
+
+const onUserConnect = (data) => {
+
+    createUser(data);
+};
+
+const onUserDisconnect = (login) => {
+
+    allMembers.removeChild(users[login].element);
+    delete users[login];
+    updateOnlineCounter(-1);
+};
+
+const fillUsers = (onlineUsers) => {
+
+    for (const key in onlineUsers) {
+        createUser(onlineUsers[key]);
+    }
+};
+
+const updateOnlineCounter = (add) => {
+    onlineCounter+= add;
+    counter.textContent = `(${onlineCounter})`;
+};
+
+const onUploadPhoto = (status) => {
+    if (status === 'ok') {
+        userPhoto.src = fileBase;
+    }
+    updateMessagesPhoto(loginData.login, fileBase);
+};
+
+const onUpdatePhoto = (data) => {
+    updateMessagesPhoto(data.login, data.photo);
+};
+
+const updateMessagesPhoto = (login, photo) => {
+
+};
+

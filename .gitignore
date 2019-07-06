@@ -4,7 +4,9 @@
 *.lock
 !yarn.lock
 *.log
+*.xml
 out/
 dist/
 node_modules/
 coverage/
+

@@ -10,10 +10,15 @@
     <div id="leftPanel">
         <div id="userInfo">
             <img src="" alt="" id="userPhoto">
-            <span id="user"><h2>Добро пожаловать</h2></span>
+            <span id="userName"></span>
         </div>
-        <div id="members">
-            <div id="counter"><h2>Участники</h2></div>
+        <div id="welcome"><h2>Добро пожаловать</h2></div>
+        <div id="membersContainer">
+            <div>
+                <span>Участники</span>
+                <span id="counter"></span>
+            </div>
+            <div id="members"></div>
         </div>
     </div>
     <div id="chat">
@@ -29,15 +34,15 @@
 
 <div id="authWindow">
     <h3>Авторизация</h3>
-    <input type="text" id="name" placeholder="ФИО">
-    <input type="text" id="login" placeholder="Ник">
+    <input type="text" id="userNameInput" placeholder="ФИО">
+    <input type="text" id="userLoginInput" placeholder="Ник">
     <button id="loginButton"><strong>Войти</strong></button>
 </div>
 
 <div id="avatar">
     <label class="label">
         <input type="file" id="fileElem" multiple="false" accept="image/*">
-        <span class="fakeUpload">Перетяните изображение</span>
+        <span id="fakeUpload">Перетяните изображение</span>
     </label>
     <button id="uploadButton">Загрузить</button>
     <button id="cancelButton">Отмена</button>
