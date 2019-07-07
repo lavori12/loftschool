@@ -8,17 +8,17 @@
 <body>
 <div id="mainWindow">
     <div id="leftPanel">
-        <div id="userInfo">
-            <img src="" alt="" id="userPhoto">
-            <span id="userName"></span>
+        <div id="userInfoContainer">
+            <img src="" alt="" id="currentUserPhoto">
+            <span id="currentUserName"></span>
         </div>
-        <div id="welcome"><h2>Добро пожаловать</h2></div>
-        <div id="membersContainer">
-            <div>
+        <div id="welcome" class="headers">Добро пожаловать</div>
+        <div>
+            <div class="headers">
                 <span>Участники</span>
-                <span id="counter"></span>
+                (<span id="counter">0</span>)
             </div>
-            <div id="members"></div>
+            <div id="membersContainer"></div>
         </div>
     </div>
     <div id="chat">
@@ -26,26 +26,30 @@
 
         </div>
         <div id="newMessage">
-            <input type="text" id="textMessage" placeholder="Введите сообщение">
-            <button id="sendButton"><strong>Отправить</strong></button>
+	        <form id="messageForm" action="">
+		        <input type="text" id="messageInput" placeholder="Введите сообщение">
+		        <button id="sendButton"><strong>Отправить</strong></button>
+	        </form>
         </div>
     </div>
 </div>
 
-<div id="authWindow">
+<div id="authPopup">
     <h3>Авторизация</h3>
-    <input type="text" id="userNameInput" placeholder="ФИО">
-    <input type="text" id="userLoginInput" placeholder="Ник">
-    <button id="loginButton"><strong>Войти</strong></button>
+	<form id="authForm" action="">
+		<input type="text" id="userNameInput" placeholder="ФИО">
+		<input type="text" id="userLoginInput" placeholder="Ник">
+		<button id="loginButton"><strong>Войти</strong></button>
+	</form>
 </div>
 
-<div id="avatar">
-    <label class="label">
-        <input type="file" id="fileElem" multiple="false" accept="image/*">
-        <span id="fakeUpload">Перетяните изображение</span>
+<div id="photoPopup">
+    <label id="label">
+        <input type="file" id="fileInput" multiple="false" accept="image/*">
+        <span id="fakeUploadLabel">Перетяните изображение</span>
     </label>
-    <button id="uploadButton">Загрузить</button>
-    <button id="cancelButton">Отмена</button>
+    <button id="uploadPhotoButton">Загрузить</button>
+    <button id="cancelPhotoButton">Отмена</button>
 </div>
 <script src="src/app.js"></script>
 </body>
