@@ -110,10 +110,18 @@ const userLogin = (client, userInfo) => {
     let messages = [];
 
     for (const key in user.messages) {
-        const message = db.get('messages').find({ id: user.messages[key] }).value();
+        const message = db.get('messages').find({id: user.messages[key]}).value();
 
         if (message) {
-            messages.push(message); 
+            if (!users[message.login]) {
+                const user = db.get(`users.${message.login}`).value();
+                users[message.login] = {
+                    login: user.login,
+                    name: user.name,
+                    photo: user.photo
+                };
+            }
+            messages.push(message);
         }
     }
 
