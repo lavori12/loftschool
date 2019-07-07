@@ -1,9 +1,56 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>{{htmlWebpackPlugin.options.title}}</title>
+    <meta charset="UTF-8">
+    <title>{{htmlWebpackPlugin.options.title}}</title>
+    <link rel="stylesheet" type="text/css" href="src/myStyle.css">
 </head>
 <body>
+<div id="mainWindow">
+    <div id="leftPanel">
+        <div id="userInfoContainer">
+            <img src="" alt="" id="currentUserPhoto">
+            <span id="currentUserName"></span>
+        </div>
+        <div id="welcome" class="headers">Добро пожаловать</div>
+        <div>
+            <div class="headers">
+                <span>Участники</span>
+                (<span id="counter">0</span>)
+            </div>
+            <div id="membersContainer"></div>
+        </div>
+    </div>
+    <div id="chat">
+        <div id="messagesContainer">
+
+        </div>
+        <div id="newMessage">
+	        <form id="messageForm" action="">
+		        <input type="text" id="messageInput" placeholder="Введите сообщение">
+		        <button id="sendButton"><strong>Отправить</strong></button>
+	        </form>
+        </div>
+    </div>
+</div>
+
+<div id="authPopup">
+    <h3>Авторизация</h3>
+	<form id="authForm" action="">
+		<input type="text" id="userNameInput" placeholder="ФИО">
+		<input type="text" id="userLoginInput" placeholder="Ник">
+		<button id="loginButton"><strong>Войти</strong></button>
+	</form>
+</div>
+
+<div id="photoPopup">
+    <label id="label">
+        <input type="file" id="fileInput" multiple="false" accept="image/*">
+        <span id="fakeUploadLabel">Перетяните изображение</span>
+    </label>
+    <button id="uploadPhotoButton">Загрузить</button>
+    <button id="cancelPhotoButton">Отмена</button>
+</div>
+<script src="src/app.js"></script>
 </body>
 </html>

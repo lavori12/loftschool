@@ -1,0 +1,194 @@
+* {
+    margin:0;
+    padding: 0;
+}
+
+html, body {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+button {
+    background-color: #ff9966;
+    color: #ffffff;
+    border: 0px;
+    border-radius: 10px;
+    width: 100px;
+    height: 30px;
+    cursor: pointer;
+}
+
+#mainWindow {
+    display: flex;
+    height: 100%;
+}
+
+
+#photoPopup {
+    display: none;
+    position: absolute;
+    width: 400px;
+    height: 300px;
+    top: 50px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    border: 0px;
+}
+
+#authPopup {
+    display: block;
+    position: absolute;
+    width: 300px;
+    height: 200px;
+    top: 50px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    border: 1px solid;
+}
+
+#leftPanel {
+    width: 20%;
+    background-color: #ff9966;
+    color: #ffffff;
+}
+
+#chat {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+}
+
+#messagesContainer {
+    flex: 1 1 0;
+    box-sizing: content-box;
+    padding: 10px;
+}
+
+#newMessage {
+    display: flex;
+    flex: 0 0 auto;
+    height: 90px;
+}
+
+#messageForm {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#messageInput {
+    flex: 1 0 auto;
+    margin: 0 20px;
+}
+
+#sendButton {
+    margin: 0 20px;
+    flex: 0 0 auto;
+}
+
+#fakeUploadLabel {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+#label {
+    display: flex;
+    width: 400px;
+    height: 300px;
+    border-radius: 4px;
+    border: 1px dashed #000;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-color: #ffffff;
+}
+
+#fileInput {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+}
+
+#currentUserName {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+#currentUserPhoto {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+#userInfoContainer {
+    display: none;
+}
+
+.headers {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 24px;
+}
+
+.message {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.message.userMessage {
+    flex-direction: row-reverse;
+}
+
+.message .messagePhoto {
+    width: 50px;
+    height: 50px;
+    margin: 0 10px;
+}
+
+.message .messageDataContainer {
+    display: flex;
+    flex-direction: column;
+}
+
+.message .messageDataContainer .messageMetaContainer {
+    display: flex;
+    align-items: flex-end;
+    line-height: 20px;
+    font-weight: bold;
+}
+
+.message.userMessage .messageDataContainer .messageMetaContainer {
+    flex-direction: row-reverse;
+}
+
+.message .messageDataContainer .messageMetaContainer .messageName {
+    margin-right: 5px;
+    font-size: 18px;
+}
+
+.message .messageDataContainer .messageMetaContainer .messageDate {
+    color: #888;
+    font-size: 14px;
+}
+
+.message.userMessage .messageDataContainer .messageText {
+    text-align: right;
+}
+
+.messageDate {
+    margin-right: 10px;
+}

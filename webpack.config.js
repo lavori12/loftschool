@@ -50,6 +50,10 @@ module.exports = {
         filename: '[name].[hash].js',
         path: path.resolve('dist')
     },
+    node: {
+        fs: 'empty'
+    },
+    target: 'web',
     mode: 'development',
     devtool: 'source-map',
     module: {
